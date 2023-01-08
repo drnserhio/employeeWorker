@@ -5,8 +5,10 @@ import employee.time.employee_time.exception.domain.BiometryException;
 import employee.time.employee_time.exception.domain.StoreException;
 import employee.time.employee_time.exception.domain.UserException;
 import employee.time.employee_time.facade.StaticEmployeeFacade;
+import employee.time.employee_time.facade.StoreFacade;
 import employee.time.employee_time.facade.UserFacade;
 import employee.time.employee_time.model.StaticEmployee;
+import employee.time.employee_time.model.Store;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Sort;
@@ -23,14 +25,15 @@ import static org.springframework.http.HttpStatus.OK;
  **/
 
 @RestController
-@RequestMapping("/employee")
+@RequestMapping("/employee/work")
 @AllArgsConstructor
 public class UserController {
 
     private final UserFacade userFacade;
+    private final StoreFacade storeFacade;
     private final StaticEmployeeFacade staticEmployeeFacade;
 
-    @PostMapping("/work/accept")
+    @PostMapping("/accept")
     public ResponseEntity<HttpStatus> acceptWork(
             @RequestBody RequestEmployeeFormStartWorkDto employeeFormStartWork)
             throws BiometryException, UserException, StoreException {
@@ -38,7 +41,7 @@ public class UserController {
         return new ResponseEntity<>(OK);
     }
 
-    @GetMapping("/work/check/list")
+    @GetMapping("/check/list")
     public ResponseEntity<Page<StaticEmployee>> getWorkerCheckPage(
             @RequestParam(value = "sort", required = false, defaultValue = "DESC") Sort.Direction sort,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page,
@@ -46,4 +49,13 @@ public class UserController {
         Page<StaticEmployee> workerCheckPage = staticEmployeeFacade.getWorkerCheckPage(sort, page, size);
         return new ResponseEntity<>(workerCheckPage, OK);
     }
+
+    @GetMapping("/store/list")
+    public ResponseEntity<Page<Store>> getStorePage(
+            @RequestParam(value = "page", required = false, defaultValue = "0") int page,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size) {
+        Page<Store> stores = storeFacade.findAll(page, size);
+        return new ResponseEntity<>(stores, OK);
+    }
+
 }
