@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    #    Docker config:
+    #      url: jdbc:postgresql://postgres:5432/worker?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    #      username: root
+    #      password: root
+
+    #  Localhost config:
+    url: jdbc:postgresql://localhost:5432/worker?useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: postgres
+    password: 5600
+  sql:
+    init:
+      platform: postgres
+      schema-locations: classpath:sql/schema.sql
+      data-locations: classpath:sql/data.sql
+      mode: always
+  jpa:
+    show-sql: true
+    generate-ddl: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL91Dialect
+        jdbc:
+          batch_size: 50
+          fetch_size: 50
+        c3p0:
+          max_size: 32
+          min_size: 8
+
+
+
